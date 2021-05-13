@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react'
 import styled from 'styled-components';
 import { ICalendar, ICellWrapper } from '../../interfaces';
@@ -23,27 +24,40 @@ display:flex;
 `;
 
 const DayWrapper = styled.div`
-height: 15px;
+height: 33px;
 width: 33px;
 display:flex;
 align-items:center;
 justify-content: center;
+margin: 2px;
+`;
+
+const CurrentDay = styled.div`
+height: 100%;
+width: 100%;
+background: #3f75a5;
+border-radius: 50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color: #DDDCDD;
 `;
 
 export default function useCalendarGrid({ startDay }: ICalendar) {
-    const totaldays = 42;
     const day = startDay.clone().subtract(1, 'day');
     const days = [...Array(42)].map(() => day.add(1, 'day').clone());
-    console.log(days)
+    const currentDay = (day: moment.Moment) => moment().isSame(day, 'day');
+
     return (
         <GridWrapper>
             {days.map((dayItem) => (
                 <CellWrapper
-                    key={dayItem.format('DDMMYYY')}
+                    key={dayItem.unix()}
                     isWeekend={dayItem.day() === 6 || dayItem.day() === 0}>
                     <RowInCell>
                         <DayWrapper>
-                            {dayItem.format('D')}
+                            {!currentDay(dayItem) && dayItem.format('D')}
+                            {currentDay(dayItem) && <CurrentDay>{dayItem.format('D')}</CurrentDay>}
                         </DayWrapper>
                     </RowInCell>
                 </CellWrapper>

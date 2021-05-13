@@ -40,7 +40,10 @@ font-weight:bold;
 `;
 
 
-export default function useDashboard({ actualMoment }: IDashboard) {
+export default function useDashboard(props: IDashboard) {
+
+    const { actualMoment, prevHandler, todayHandler, nextHandler } = props;
+
     return (
         <DivWraper>
             <div>
@@ -48,9 +51,9 @@ export default function useDashboard({ actualMoment }: IDashboard) {
                 <TexWrapper>{actualMoment.format('YYYY')}</TexWrapper>
             </div>
             < ButtonsWrapper>
-                <ButtonWrapper>{'<'}</ButtonWrapper>
-                <TodayButon>Today</TodayButon>
-                <ButtonWrapper>{'>'}</ButtonWrapper>
+                <ButtonWrapper onClick={prevHandler}>{'<'}</ButtonWrapper>
+                <TodayButon onClick={todayHandler}>Today</TodayButon>
+                <ButtonWrapper onClick={nextHandler}>{'>'}</ButtonWrapper>
             </ ButtonsWrapper>
         </DivWraper>
     )

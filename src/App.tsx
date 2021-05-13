@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import './App.css';
 import moment from 'moment'
-import UseHeader from './components/Header/useHeader';
 import UseDashboard from './components/Dashboard/useDashboard';
 import UseCalendarGrid from './components/CalendarGrid/useCalendarGrid';
 import styled from 'styled-components';
+
 
 const Container = styled('div')`
 border-top:1px solid #737374;
@@ -15,7 +16,8 @@ overflow:hidden;
 
 function App() {
 
-  const actualMoment = moment();
+  const [actualMoment, setActualMoment] = useState(moment());
+  //const actualMoment = moment() ;
   const startDay = actualMoment.clone().startOf('month').startOf('week');
   const endDay = moment().endOf('month').endOf('week');
 
@@ -26,12 +28,18 @@ function App() {
     day.add(1, 'day')
   }
 
-
+  const prevHandler = () => setActualMoment(prev => prev.clone().subtract(1, 'month'));;
+  const todayHandler = () => setActualMoment(moment());
+  const nextHandler = () => setActualMoment(prev => prev.clone().add(1, 'month'));
 
   return (
     <Container>
-      {/* <UseHeader /> */}
-      <UseDashboard actualMoment={actualMoment} />
+      <UseDashboard
+        actualMoment={actualMoment}
+        prevHandler={prevHandler}
+        todayHandler={todayHandler}
+        nextHandler={nextHandler}
+      />
       <UseCalendarGrid startDay={startDay} />
     </Container>
   );
