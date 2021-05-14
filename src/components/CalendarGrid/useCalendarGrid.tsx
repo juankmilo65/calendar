@@ -16,7 +16,10 @@ const CellWrapper = styled.div<ICellWrapper>`
 min-width: 140px;
 min-height: 80px;
 background-color: ${props => props.isWeekend ? '#c3c9cc' : '#f2f2f2'};
-color: ${props => props.isWeekend ? '#73acd4' : '#1E1F21'}; 
+color: ${props => props.isWeekend ?
+        props.isSelectedMonth ? '#73acd4' : '#b2b9bf'
+        :
+        props.isSelectedMonth ? '#1E1F21' : '#b2b9bf'}; 
 font-weight:bold;
 `;
 
@@ -53,10 +56,13 @@ justify-content:center;
 color: #DDDCDD;
 `;
 
-export default function useCalendarGrid({ startDay }: ICalendar) {
+export default function useCalendarGrid(props: ICalendar) {
+
+    const { startDay, actualMoment } = props;
     const day = startDay.clone().subtract(1, 'day');
     const days = [...Array(42)].map(() => day.add(1, 'day').clone());
     const currentDay = (day: moment.Moment) => moment().isSame(day, 'day');
+    const isSelectedMonth = (day: moment.Moment) => actualMoment.isSame(day, 'month');
 
     return (
         <>
@@ -73,6 +79,7 @@ export default function useCalendarGrid({ startDay }: ICalendar) {
                 {days.map((dayItem) => (
                     <CellWrapper
                         key={dayItem.unix()}
+                        isSelectedMonth={isSelectedMonth(dayItem)}
                         isWeekend={dayItem.day() === 6 || dayItem.day() === 0}>
                         <RowInCell justifyContent={'flex-start'} >
                             <DayWrapper>

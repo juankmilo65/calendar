@@ -40,7 +40,7 @@ function App() {
         todayHandler={todayHandler}
         nextHandler={nextHandler}
       />
-      <UseCalendarGrid startDay={startDay} />
+      <UseCalendarGrid startDay={startDay} actualMoment={actualMoment} />
     </Container>
   );
 }
