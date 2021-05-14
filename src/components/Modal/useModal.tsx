@@ -45,7 +45,9 @@ const EventWraper = styled('div')`
 `;
 
 const WeatherWraper = styled(EventWraper)`
-
+display: grid;
+justify-content: center;
+color: #3f75a5;
 `;
 
 export default memo(function useModal(props: IModal) {
