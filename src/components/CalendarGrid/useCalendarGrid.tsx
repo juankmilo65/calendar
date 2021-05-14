@@ -1,26 +1,36 @@
 import moment from 'moment';
 import React from 'react'
 import styled from 'styled-components';
-import { ICalendar, ICellWrapper } from '../../interfaces';
+import { ICalendar, ICellWrapper, IHeaders, IRowInCell } from '../../interfaces';
 
-const GridWrapper = styled.div`
+const GridWrapper = styled.div<IHeaders>`
 display: grid;
 grid-template-columns: repeat(7, 1fr);
-grid-template-rows: repeat(6, 1fr);
 grid-gap:1px;
-background-color: #404040;
+background-color: ${props => props.isHeader ? '#3f75a5' : '#404040'};
+${props => props.isHeader && 'border-botton: 1px solid #404040'}
+
 `;
 
 const CellWrapper = styled.div<ICellWrapper>`
 min-width: 140px;
 min-height: 80px;
 background-color: ${props => props.isWeekend ? '#c3c9cc' : '#f2f2f2'};
-color: ${props => props.isWeekend ? '#73acd4' : '#1E1F21'}; ;
+color: ${props => props.isWeekend ? '#73acd4' : '#1E1F21'}; 
 font-weight:bold;
 `;
 
-const RowInCell = styled.div`
+const HeaderWrapper = styled.div`
+min-width: 140px;
+min-height: 24px;
+background-color: #3f75a5;
+color: #DDDCDD;
+font-weight:bold;
+`;
+
+const RowInCell = styled.div<IRowInCell>`
 display:flex;
+justify-content: ${props => props.justifyContent} ;
 `;
 
 const DayWrapper = styled.div`
@@ -49,19 +59,30 @@ export default function useCalendarGrid({ startDay }: ICalendar) {
     const currentDay = (day: moment.Moment) => moment().isSame(day, 'day');
 
     return (
-        <GridWrapper>
-            {days.map((dayItem) => (
-                <CellWrapper
-                    key={dayItem.unix()}
-                    isWeekend={dayItem.day() === 6 || dayItem.day() === 0}>
-                    <RowInCell>
-                        <DayWrapper>
-                            {!currentDay(dayItem) && dayItem.format('D')}
-                            {currentDay(dayItem) && <CurrentDay>{dayItem.format('D')}</CurrentDay>}
-                        </DayWrapper>
-                    </RowInCell>
-                </CellWrapper>
-            ))}
-        </GridWrapper>
+        <>
+            <GridWrapper isHeader={true}>
+                {[...Array(7)].map((_, i) => (
+                    <HeaderWrapper>
+                        <RowInCell justifyContent={'center'} >
+                            {moment().day(i).format('dddd')}
+                        </RowInCell>
+                    </HeaderWrapper>)
+                )}
+            </GridWrapper>
+            <GridWrapper isHeader={false}>
+                {days.map((dayItem) => (
+                    <CellWrapper
+                        key={dayItem.unix()}
+                        isWeekend={dayItem.day() === 6 || dayItem.day() === 0}>
+                        <RowInCell justifyContent={'flex-start'} >
+                            <DayWrapper>
+                                {!currentDay(dayItem) && dayItem.format('D')}
+                                {currentDay(dayItem) && <CurrentDay>{dayItem.format('D')}</CurrentDay>}
+                            </DayWrapper>
+                        </RowInCell>
+                    </CellWrapper>
+                ))}
+            </GridWrapper>
+        </>
     )
 }
