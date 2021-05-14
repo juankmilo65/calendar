@@ -50,7 +50,7 @@ const WeatherWraper = styled(EventWraper)`
 
 export default memo(function useModal(props: IModal) {
 
-    const { driveModalEvent, isOpen, actualMoment, day } = props;
+    const { driveModalEvent, isOpen, day } = props;
     const [opacity, setOpacity] = useState(0);
     const [modalState, setModalState] = useState({
         event: '',
@@ -116,7 +116,7 @@ export default memo(function useModal(props: IModal) {
                         </EventWraper>
                         <WeatherWraper>
                             <span>Weather!</span>
-                            <Weather city={''} country={''} day={day}></Weather>
+                            <Weather day={day}></Weather>
                         </WeatherWraper>
                     </ContenModal>
                 </Distribution>

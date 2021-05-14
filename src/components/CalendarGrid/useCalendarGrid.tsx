@@ -102,7 +102,7 @@ export default memo(function useCalendarGrid(props: ICalendar) {
 
                 ))}
             </GridWrapper>
-            {modalIsOpened ? <Modal driveModalEvent={driveModalEvent} isOpen={modalIsOpened} actualMoment={actualMoment} day={selectedDay}></Modal> : <></>}
+            {modalIsOpened ? <Modal driveModalEvent={driveModalEvent} isOpen={modalIsOpened} day={selectedDay}></Modal> : <></>}
         </>
     )
 }
