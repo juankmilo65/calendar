@@ -1,7 +1,8 @@
-import moment from 'moment';
-import React from 'react'
+import moment, { Moment } from 'moment';
+import { useState, memo } from 'react'
 import styled from 'styled-components';
 import { ICalendar, ICellWrapper, IHeaders, IRowInCell } from '../../interfaces';
+import Modal from '../Modal/useModal';
 
 const GridWrapper = styled.div<IHeaders>`
 display: grid;
@@ -56,19 +57,27 @@ justify-content:center;
 color: #DDDCDD;
 `;
 
-export default function useCalendarGrid(props: ICalendar) {
+export default memo(function useCalendarGrid(props: ICalendar) {
 
     const { startDay, actualMoment } = props;
+    const [modalIsOpened, setModalIsOpened] = useState(false);
+    const [selectedDay, setSelectedDay] = useState<Moment>();
     const day = startDay.clone().subtract(1, 'day');
     const days = [...Array(42)].map(() => day.add(1, 'day').clone());
-    const currentDay = (day: moment.Moment) => moment().isSame(day, 'day');
     const isSelectedMonth = (day: moment.Moment) => actualMoment.isSame(day, 'month');
+    const currentDay = (day: moment.Moment) => moment().isSame(day, 'day');
+
+
+    const driveModalEvent = (value: boolean, day: moment.Moment) => {
+        setModalIsOpened(value);
+        setSelectedDay(day);
+    };
 
     return (
         <>
             <GridWrapper isHeader={true}>
                 {[...Array(7)].map((_, i) => (
-                    <HeaderWrapper>
+                    <HeaderWrapper key={_}>
                         <RowInCell justifyContent={'center'} >
                             {moment().day(i).format('dddd')}
                         </RowInCell>
@@ -77,19 +86,24 @@ export default function useCalendarGrid(props: ICalendar) {
             </GridWrapper>
             <GridWrapper isHeader={false}>
                 {days.map((dayItem) => (
+
                     <CellWrapper
                         key={dayItem.unix()}
                         isSelectedMonth={isSelectedMonth(dayItem)}
-                        isWeekend={dayItem.day() === 6 || dayItem.day() === 0}>
-                        <RowInCell justifyContent={'flex-start'} >
+                        isWeekend={dayItem.day() === 6 || dayItem.day() === 0}
+                        onClick={() => driveModalEvent(true, dayItem)}>
+                        <RowInCell justifyContent={'flex-start'}  >
                             <DayWrapper>
                                 {!currentDay(dayItem) && dayItem.format('D')}
                                 {currentDay(dayItem) && <CurrentDay>{dayItem.format('D')}</CurrentDay>}
                             </DayWrapper>
                         </RowInCell>
                     </CellWrapper>
+
                 ))}
             </GridWrapper>
+            {modalIsOpened ? <Modal driveModalEvent={driveModalEvent} isOpen={modalIsOpened} actualMoment={actualMoment} day={selectedDay}></Modal> : <></>}
         </>
     )
 }
+)

@@ -28,7 +28,7 @@ function App() {
     day.add(1, 'day')
   }
 
-  const prevHandler = () => setActualMoment(prev => prev.clone().subtract(1, 'month'));;
+  const prevHandler = () => setActualMoment(prev => prev.clone().subtract(1, 'month'));
   const todayHandler = () => setActualMoment(moment());
   const nextHandler = () => setActualMoment(prev => prev.clone().add(1, 'month'));
 
